@@ -15,6 +15,15 @@
         Preloader
     --------------------*/
     $(window).on('load', function () {
+
+        var user = getAuthUser();
+        if (user != null) {
+            $(".login-auth").html(`
+                <a href="#"><i class="fa fa-user"></i> ${user.tenTaiKhoan}</a>
+                `)
+
+            $('.logout-auth').html('<a href="javascript:logout()"><i class="fa fa-sign-out"></i> Đăng Xuất </a>')
+        }
         $(".loader").fadeOut();
         $("#preloder").delay(200).fadeOut("slow");
 
