@@ -26,13 +26,15 @@ function renderCheckout() {
     $('#checkout-list').html(checkoutHtml);
 
     // Cập nhật subtotal và total
-    updateCheckoutTotal(subtotal);
+    updateCheckoutTotal();
 }
 
-function updateCheckoutTotal(subtotal) {
+function updateCheckoutTotal() {
     // Cập nhật subtotal và total vào giao diện
+    let total = getTotalPrice()
+    let subtotal = -getGiamgia(total);
     $('.checkout__order__subtotal span').text(subtotal.toLocaleString('vi-VN') + ' VND');
-    $('.checkout__order__total span').text(subtotal.toLocaleString('vi-VN') + ' VND'); // Bạn có thể thêm phí vận chuyển nếu cần
+    $('.checkout__order__total span').text((total+subtotal).toLocaleString('vi-VN') + ' VND'); // Bạn có thể thêm phí vận chuyển nếu cần
 }
 
 // Gọi hàm renderCheckout để hiển thị hóa đơn
@@ -132,14 +134,23 @@ $(document).ready(function () {
 $(document).ready(function() {
     // Hàm xử lý khi người dùng nhấn nút "PLACE ORDER"
     $('.site-btn').click(function(e) {
+        
         e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+        // Gọi hàm getAuthUser để lấy ID tài khoản
+        const user = getAuthUser(); // Giả sử hàm này trả về đối tượng người dùng
+
+        if (user == null) {
+            alert("Vui lòng đăng nhập trước để mua hàng.");
+            window.location.href='/login.html';
+            return;
+        }
 
         // Lấy dữ liệu từ form
         const hoTen = $('#full-name').val();
         const diaChi = $('#address').val();
         const sdt = $('#phone').val();
         const email = $('#email').val();
-        const ghiChu = $('input[placeholder="Notes about your order, e.g. special notes for delivery."]').val();
 
         // Kiểm tra xem các trường bắt buộc có được điền đầy đủ không
         if (!hoTen || !diaChi || !email || !sdt) {
@@ -147,29 +158,28 @@ $(document).ready(function() {
             return; // Ngăn chặn việc gửi yêu cầu
         }
 
-        // Gọi hàm getAuthUser để lấy ID tài khoản
-        const user = getAuthUser(); // Giả sử hàm này trả về đối tượng người dùng
         const idTaiKhoan = user.id; // Lấy ID tài khoản từ đối tượng người dùng
 
         // Giả sử phần tính tổng tiền đã được tính toán sẵn
-        const tongTien = $('#checkout-list').data('total') || 0;
+        const tongTien = getTotalPrice() - getGiamgia(getTotalPrice());
         const maHoaDon = generateRandomCode();  // Bạn có thể tạo mã hóa đơn ngẫu nhiên
-        const maNguoiDung = generateRandomCode();  // Bạn có thể tạo mã hóa đơn ngẫu nhiên
+        const ghiChu = $('#note').val()
+        const gh = $('#gh-or:checked').val() || 'cơ bản'
 
         // Tạo object dữ liệu cho người dùng và hóa đơn
         const data = {
             nguoiDung: {
-                maNguoiDung: maNguoiDung , // Để trống nếu là người dùng mới
                 hoTen: hoTen,
                 diaChi: diaChi,
                 email: email,
                 sdt: sdt,
-                ghiChu: ghiChu,
                 idTaiKhoan: idTaiKhoan // Gán ID tài khoản vào DTO
             },
             tongTien: tongTien.toString(), // Chuyển sang chuỗi nếu cần
             tienThu: "0",  // Tiền thu mặc định là 0 khi chưa thanh toán
-            tienGiam: "0"  // Tiền giảm mặc định
+            tienGiam: "0" , // Tiền giảm mặc định
+            ghiChu: `LOAI GIAO HANG: ${gh}, KHACH HANG GHI CHU: ${ghiChu}`,
+            maGiamGia: getDiscount().ma
         };
 
         // Gửi dữ liệu lên server qua AJAX
@@ -181,6 +191,8 @@ $(document).ready(function() {
             success: function(response) {
                 alert("Đặt đơn thành công!");
                 // Xử lý điều hướng sau khi đặt hàng thành công
+                deleteCoupon();
+                clearCart();
                 window.location.href = "/checkout-success.html"; // Chuyển hướng đến trang thành công
             },
             error: function(xhr, status, error) {
