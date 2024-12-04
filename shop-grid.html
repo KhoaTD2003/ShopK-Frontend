@@ -63,101 +63,25 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sidebar__item sidebar__item__color--option">
+                        <div class="sidebar__item sidebar__item__color--option" id="list_color">
                             <h4>Colors</h4>
-                            <div class="sidebar__item__color sidebar__item__color--white">
+                            <div class="sidebar__item__color sidebar__item__color--white" >
                                 <label for="white">
                                     White
                                     <input type="radio" id="white">
                                 </label>
                             </div>
-                            <div class="sidebar__item__color sidebar__item__color--gray">
-                                <label for="gray">
-                                    Gray
-                                    <input type="radio" id="gray">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--red">
-                                <label for="red">
-                                    Red
-                                    <input type="radio" id="red">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--black">
-                                <label for="black">
-                                    Black
-                                    <input type="radio" id="black">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--blue">
-                                <label for="blue">
-                                    Blue
-                                    <input type="radio" id="blue">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--green">
-                                <label for="green">
-                                    Green
-                                    <input type="radio" id="green">
-                                </label>
-                            </div>
+
                         </div>
-                        <div class="sidebar__item">
+                        <div class="sidebar__item" >
                             <h4> Size</h4>
-                            <div class="sidebar__item__size">
-                                <label for="medium">
+                            <div class="sidebar__item__size" id="list_size" >
+                                <!-- <label for="medium">
                                     36
                                     <input type="radio" id="medium">
-                                </label>
+                                </label> -->
                             </div>
-                            <div class="sidebar__item__size">
-                                <label for="small">
-                                    37
-                                    <input type="radio" id="small">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    38
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    39
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    40
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    41
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    42
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    43
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    44
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
+                           
                         </div>
                         <div class="sidebar__item">
                             <div class="latest-product__text">
@@ -256,6 +180,9 @@
                     <div class="row product_list">
                         <div></div>
                     </div>
+                
+                    <div class="product__pagination" id="pagination"></div>
+
                     <!-- <div class="product__pagination">
                         <a href="#">1</a>
                         <a href="#">2</a>
@@ -263,6 +190,12 @@
                         <a href="#"><i class="fa fa-long-arrow-right"></i></a>
                     </div> -->
                 </div>
+
+                <!-- <div class="product__pagination">
+                    <button onclick="changePage('prev')" class="pagination__button">Prev</button>
+                    <span id="currentPage">1</span> / <span id="totalPages">1</span>
+                    <button onclick="changePage('next')" class="pagination__button">Next</button>
+                </div> -->
             </div>
         </div>
     </section>
@@ -281,7 +214,6 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <!-- <script src="js/main.js"></script> -->
-
     <script src="js/sanpham.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/page.js"></script>

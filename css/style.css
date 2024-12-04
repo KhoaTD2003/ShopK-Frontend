@@ -38,6 +38,8 @@ body {
 	font-smoothing: antialiased;
 }
 
+
+
 h1,
 h2,
 h3,
@@ -408,7 +410,7 @@ ol {
 }
 
 .header__logo {
-	padding: 15px 0;
+	padding: 10px 0;
 }
 
 .header__logo a {
@@ -478,7 +480,7 @@ ol {
 }
 
 .header__menu ul li a {
-	font-size: 14px;
+	font-size: 16px;
 	color: #252525;
 	text-transform: uppercase;
 	font-weight: 700;
@@ -488,7 +490,7 @@ ol {
 	-ms-transition: all, 0.3s;
 	-o-transition: all, 0.3s;
 	transition: all, 0.3s;
-	padding: 5px 0;
+	padding: 20px 0;
 	display: block;
 }
 
@@ -1203,6 +1205,37 @@ ol {
 .sidebar__item__color.sidebar__item__color--green label:after {
 	background: #3CC032;
 }
+.sidebar__item__color.sidebar__item__color--gray label:after {
+	background: #E9A625;
+}
+
+.sidebar__item__color.sidebar__item__color--red label:after {
+	background: #D62D2D;
+}
+
+.sidebar__item__color.sidebar__item__color--black label:after {
+	background: #252525;
+}
+
+.sidebar__item__color.sidebar__item__color--blue label:after {
+	background: #249BC8;
+}
+
+.sidebar__item__color.sidebar__item__color--yellow label:after {
+	background: #FFFF00	;
+}
+.sidebar__item__color.sidebar__item__color--purple label:after {
+	background: #800080	
+	;
+}
+.sidebar__item__color.sidebar__item__color--cyan label:after {
+	background: #00FFFF
+	;
+}
+.sidebar__item__color.sidebar__item__color--yellow label:after {
+	background: #FFFF00	;
+}
+
 
 .sidebar__item__color label {
 	font-size: 16px;
@@ -1654,6 +1687,26 @@ ol {
 .blog__pagination a:last-child {
 	margin-right: 0;
 }
+
+
+.product__pagination a.active {
+    font-weight: bold;         /* Làm đậm văn bản cho trang hiện tại */
+    color: white;              /* Màu văn bản cho trang hiện tại */
+    background-color: #7fad39; /* Màu nền cho trang hiện tại */
+    border: 1px solid #7fad39; /* Viền cho trang hiện tại */
+    pointer-events: none;      /* Vô hiệu hóa sự kiện nhấp vào trang hiện tại */
+}
+
+.pagination-ellipsis {
+    padding: 10px;         /* Khoảng cách bên trong */
+	color: #007bff;   			 /*           Màu văn bản cho dấu ba chấm */
+    font-weight: bold;			/*           Làm đậm văn bản */
+    cursor: default;   			/*          /* Đổi con trỏ thành mặc định khi hover*/ 
+}
+
+
+/* Định dạng chung cho tất cả các vòng tròn màu */
+
 
 /*---------------------
   Shop Details

@@ -105,8 +105,9 @@
                             </div>
                             <div class="checkout__input">
                                 <p>Order notes<span>*</span></p>
-                                <input type="text" id="note"
-                                    placeholder="Notes about your order, e.g. special notes for delivery.">
+                                <input type="text" id="note" readonly>
+                                    <!-- placeholder="Notes about your order, e.g. special notes for delivery." -->
+                                    <!-- > -->
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
@@ -155,6 +156,54 @@
 
     <!-- Footer Section Begin -->
     <section class="footer-section"></section>
+    <!-- <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Modal Thành Công</title>
+    <style>
+        .modal-icon {
+            font-size: 50px;
+            color: #28a745; /* Màu xanh cho chữ V */
+        }
+    </style>
+</head>
+<body> -->
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#successModal">
+    Mở Modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Đặt Hàng Thành Công</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-icon">✔️</div>
+                <p>Xin chúc mừng! Bạn đã đặt hàng thành công.</p>
+                <p>Vui lòng đến nhận hàng tại cửa hàng.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
 
     <!-- Footer Section End -->
 

@@ -18,6 +18,7 @@ loginForm.addEventListener("submit", (e) => {
     var tenTaiKhoan = $('#account').val();
     var matKhau = $('#password').val();
 
+    
     // Gọi API để đăng nhập
     $.ajax({
         url: 'http://localhost:8080/api/taikhoan/login',  // Đường dẫn API của bạn
@@ -27,6 +28,8 @@ loginForm.addEventListener("submit", (e) => {
             matKhau: matKhau
         },
         success: function (response) {
+            delete response.matKhau;  // Xóa mật khẩu trong response
+
             // Lưu kết quả đăng nhập vào localStorage
             localStorage.setItem('taiKhoan', JSON.stringify(response));
 
@@ -36,8 +39,11 @@ loginForm.addEventListener("submit", (e) => {
         },
         error: function (xhr, status, error) {
             if (xhr.status === 404) {
-                alert('Tên tài khoản hoặc mật khẩu không đúng!');
-            } else {
+                alert('Tên tài khoản hoặc mật khẩu không đúng!'+ xhr);
+            } else if (xhr.status === 403) {
+                // Trường hợp tài khoản bị tắt
+                alert('Tài khoản của bạn đã bị tắt. Vui lòng liên hệ với quản trị viên.');
+            }else {
                 alert('Lỗi đăng nhập: ' + error);
             }
         }
@@ -72,6 +78,8 @@ signupForm.addEventListener("submit", (e) => {
         return;
     }
 
+    var role = "Khách Hàng";
+
     // Gọi API đăng ký và kiểm tra trùng lặp
     $.ajax({
         url: 'http://localhost:8080/api/taikhoan/register',  // Đường dẫn API đăng ký
@@ -81,7 +89,10 @@ signupForm.addEventListener("submit", (e) => {
             tenTaiKhoan: tenTaiKhoan,
             matKhau: matKhau,
             email: email,
-            sdt: sdt
+            sdt: sdt,
+            role: role,  // Thêm role vào dữ liệu gửi đi
+            trangthai: true    // Thiết lập trạng thái tài khoản là "hoạt động"
+
         }),
         success: function (response) {
             alert('Đăng ký thành công!');

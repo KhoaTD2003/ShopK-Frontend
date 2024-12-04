@@ -22,19 +22,30 @@ function getGiamgia(giagoc) {
 function deleteCoupon() {
     localStorage.setItem('discount', '')
     // Xóa nội dung của ô input mã giảm giá
+    // document.getElementById('coupon-code').value = '';
+    updateTotal();
+    // document.getElementById('discount-message').textContent = '';
+
+}
+
+function deleteCoupon2() {
+    localStorage.setItem('discount', '')
+    // Xóa nội dung của ô input mã giảm giá
     document.getElementById('coupon-code').value = "";
     updateTotal();
     document.getElementById('discount-message').textContent = '';
 
-
 }
+
 
 // Function to add product to cart
 function addToCart(product) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     console.log("Adding product to cart:", product);
-
+// Kiểm tra từng sản phẩm trong giỏ hàng
+// cart.forEach(item => {
+//     console.log("ID sản phẩm:", item.idSP); })
     // Check if the product is already in the cart
     let productIndex = cart.findIndex(item => item.prodId === product.prodId);
 
@@ -47,15 +58,27 @@ function addToCart(product) {
         // If product is not in the cart, add it
         // product.quantity = 1;
         cart.push(product);
+        // cart.push({
+        //     idSP: product.idSP, // Sử dụng product.id thay vì product.idSP
+        //     prodId: product.maSanPham, // Mã sản phẩm
+        //     prodName: product.tenSanPham, // Tên sản phẩm
+        //     price: product.gia, // Giá sản phẩm
+        //     quantity: 1, // Số lượng
+        //     image: product.anh, // Hình ảnh sản phẩm
+        // });
     }
+    
     alert("Đã thêm vào giỏ hàng thành công!")
     // Save updated cart to localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
+    console.log("Giỏ hàng sau khi thêm:", cart); // In ra giỏ hàng sau khi thêm
+
 }
 
 function clearCart() {
     localStorage.setItem('cart', '[]');
     localStorage.removeItem('discount'); // Xóa mã giảm giá
+    updateTotal();
     renderCart();
 }
 
