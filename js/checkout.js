@@ -105,7 +105,7 @@ $(document).ready(function () {
         const idTaiKhoan = user.id; // Lấy ID tài khoản từ đối tượng người dùng
 
         // Giả sử phần tính tổng tiền đã được tính toán sẵn
-        const tongTien = getTotalPrice() - getGiamgia(getTotalPrice());
+        const tongTien = getTotalPrice();
         const maHoaDon = generateRandomCode();  // Bạn có thể tạo mã hóa đơn ngẫu nhiên
           // Lấy thông tin sản phẩm từ giỏ hàng
           let cart = getCart(); // Giả sử hàm này trả về giỏ hàng
@@ -141,7 +141,7 @@ $(document).ready(function () {
             // ghiChu: `LOAI GIAO HANG: ${gh}, KHACH HANG GHI CHU: ${ghiChu}`,
             // ghiChu: `${ghiChu}, LOAI GIAO HANG: ${gh}`, // Thêm loại giao hàng vào ghi chú
             ghiChu: "Online",
-            maGiamGia: getDiscount().ma,
+            // maGiamGia: getDiscount(),
             sanPhamList: sanPhamList // Thêm danh sách sản phẩm vào yêu cầu
 
         };
