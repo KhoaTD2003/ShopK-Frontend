@@ -98,7 +98,10 @@ $(document).ready(function () {
             alert("Vui lòng điền đầy đủ thông tin.");
             return; // Ngăn chặn việc gửi yêu cầu
         }
-
+        if (!/^\d{10}$/.test(sdt)) {
+            alert("Số điện thoại phải có đúng 10 chữ số.");
+            return; // Ngăn chặn việc gửi yêu cầu
+        }
         const idTaiKhoan = user.id; // Lấy ID tài khoản từ đối tượng người dùng
 
         // Giả sử phần tính tổng tiền đã được tính toán sẵn
