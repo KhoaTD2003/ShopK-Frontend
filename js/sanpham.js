@@ -42,6 +42,7 @@ function getProducts(list, paramData, builder,pageNumber =1, pageSize = 12) {
             updateProductCount(response.content.length);
             updatePagination(response.totalPages, pageNumber); // Cập nhật phân trang
 
+            console.log(response.content);
             // Xây dựng toàn bộ HTML cho tất cả sản phẩm
             $.each(response.content, function (index, product) {
                 var id = product.idSP;
@@ -49,11 +50,12 @@ function getProducts(list, paramData, builder,pageNumber =1, pageSize = 12) {
                 var tenSanPham = product.tenSP;
                 var gia = product.giaBan;
                 var anh = product.anh;
+                var soLuongTon = product.stock;
 
                 // var giaFormatted = gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                 // Gọi hàm builder và thêm kết quả vào HTML
-                var productHtml = builder({id,maSanPham, tenSanPham, gia, anh });
+                var productHtml = builder({id,maSanPham, tenSanPham, gia, anh, soLuongTon});
                 $(list).append(productHtml); // Thêm sản phẩm vào danh sách
             });
 
@@ -352,6 +354,7 @@ getSizes();
 // }
 
 function cartProduct(data) {
+    console.log(data.soLuongTon);
     return `<li>
         <a href="javascript:addToCart({
             'idSP': '${data.id}', 
@@ -359,12 +362,14 @@ function cartProduct(data) {
             'prodName': '${data.tenSanPham}', 
             'price': '${data.gia}', 
             'image': '${data.anh}', 
+            'stock': '${data.soLuongTon}',
             'quantity': 1 
         }); updateCartNumber()">
             <i class="fa fa-shopping-cart"></i>
         </a>
     </li>`;
 }
+
 function viewProduct(data) {
     return `<li><a href="shop-details.html#prodId=${data.maSanPham}"> <i class="fa fa-eye"></i></a></li>`;
 }

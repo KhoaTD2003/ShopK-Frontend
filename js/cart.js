@@ -38,41 +38,75 @@ function deleteCoupon2() {
 }
 
 
-// Function to add product to cart
+// function addToCart(product) {
+    
+//     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+//     console.log("Adding product to cart:", product);
+// // Kiểm tra từng sản phẩm trong giỏ hàng
+// // cart.forEach(item => {
+// //     console.log("ID sản phẩm:", item.idSP); })
+//     // Check if the product is already in the cart
+//     let productIndex = cart.findIndex(item => item.prodId === product.prodId);
+
+//     if (productIndex !== -1) {
+//         // If product is already in the cart, increase quantity (optional)
+//         // cart[productIndex].quantity += 1;
+//         cart[productIndex].quantity += product.quantity; // Tăng số lượng bằng số lượng nhập từ ô input
+
+//     } else {
+//         // If product is not in the cart, add it
+//         // product.quantity = 1;
+//         cart.push(product);
+//         // cart.push({
+//         //     idSP: product.idSP, // Sử dụng product.id thay vì product.idSP
+//         //     prodId: product.maSanPham, // Mã sản phẩm
+//         //     prodName: product.tenSanPham, // Tên sản phẩm
+//         //     price: product.gia, // Giá sản phẩm
+//         //     quantity: 1, // Số lượng
+//         //     image: product.anh, // Hình ảnh sản phẩm
+//         // });
+//     }
+    
+//     alert("Đã thêm vào giỏ hàng thành công!")
+//     // Save updated cart to localStorage
+//     localStorage.setItem('cart', JSON.stringify(cart));
+//     console.log("Giỏ hàng sau khi thêm:", cart); // In ra giỏ hàng sau khi thêm
+
+// }
 function addToCart(product) {
+    // Lấy giỏ hàng từ localStorage (nếu có)
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     console.log("Adding product to cart:", product);
-// Kiểm tra từng sản phẩm trong giỏ hàng
-// cart.forEach(item => {
-//     console.log("ID sản phẩm:", item.idSP); })
-    // Check if the product is already in the cart
+
+    // Kiểm tra xem sản phẩm đã có trong giỏ chưa
     let productIndex = cart.findIndex(item => item.prodId === product.prodId);
 
-    if (productIndex !== -1) {
-        // If product is already in the cart, increase quantity (optional)
-        // cart[productIndex].quantity += 1;
-        cart[productIndex].quantity += product.quantity; // Tăng số lượng bằng số lượng nhập từ ô input
-
-    } else {
-        // If product is not in the cart, add it
-        // product.quantity = 1;
-        cart.push(product);
-        // cart.push({
-        //     idSP: product.idSP, // Sử dụng product.id thay vì product.idSP
-        //     prodId: product.maSanPham, // Mã sản phẩm
-        //     prodName: product.tenSanPham, // Tên sản phẩm
-        //     price: product.gia, // Giá sản phẩm
-        //     quantity: 1, // Số lượng
-        //     image: product.anh, // Hình ảnh sản phẩm
-        // });
+    // Kiểm tra nếu số lượng sản phẩm nhập vào vượt quá số lượng tồn kho
+    if (product.quantity > product.stock) {
+        alert(`Sản phẩm "${product.prodName}" không đủ số lượng trong kho. Tồn kho hiện tại: ${product.stock}`);
+        return; // Dừng việc thêm sản phẩm vào giỏ hàng nếu số lượng vượt quá tồn kho
     }
-    
-    alert("Đã thêm vào giỏ hàng thành công!")
-    // Save updated cart to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-    console.log("Giỏ hàng sau khi thêm:", cart); // In ra giỏ hàng sau khi thêm
 
+    if (productIndex !== -1) {
+        // Nếu sản phẩm đã có trong giỏ, tăng số lượng của sản phẩm đó
+        if (cart[productIndex].quantity + product.quantity > product.stock) {
+            alert(`Không thể thêm vào giỏ, số lượng sản phẩm "${product.prodName}" vượt quá số lượng tồn kho. Tồn kho: ${product.stock}`);
+            return;
+        }
+        cart[productIndex].quantity += product.quantity; // Tăng số lượng
+    } else {
+        // Nếu chưa có trong giỏ, thêm sản phẩm vào giỏ
+        cart.push(product);
+    }
+
+    // Lưu giỏ hàng lại vào localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    console.log("Giỏ hàng sau khi thêm:", cart); // In giỏ hàng ra console
+
+    // Thông báo thêm thành công
+    alert("Đã thêm vào giỏ hàng thành công!");
 }
 
 function clearCart() {
@@ -173,8 +207,11 @@ function renderCart() {
             <tr>
                 <td class="shoping__cart__item">
                     <img src="${product.image}" alt="${product.prodName}" width="100" height="100">
-                    <h5>${product.prodName}</h5>
-                </td>
+                    <h5>${product.prodName}
+                        <small class="form-text text-muted">Chỉ Còn ${product.stock} Sản Phẩm</small>
+                    </h5>
+               
+                    </td>
                 <td class="shoping__cart__price">
                     ${parseInt(product.price).toLocaleString('vi-VN')} VND
                 </td>
@@ -215,6 +252,16 @@ function renderCart() {
                 newVal = 0;
             }
         }
+
+                // Kiểm tra số lượng tồn kho
+                var productId = $button.parent().attr('prod-id');
+                var product = cart.find(item => item.prodId === productId);
+        
+                if (newVal > product.stock) {
+                    alert(`Không thể thêm số lượng này. Tồn kho hiện tại của sản phẩm "${product.prodName}" là ${product.stock}.`);
+                    return; // Không cập nhật số lượng nếu vượt quá tồn kho
+                }
+                
         $button.parent().find('input').val(newVal);
         onQtyButtonClick($button);
 
@@ -281,7 +328,76 @@ $(document).ready(function () {
                 }
             },
             error: function () {
+                deleteCoupon();
                 $('#discount-message').text("Vui lòng kiểm tra lại");
+            }
+        });
+    });
+});
+
+
+$(document).ready(function () {
+    $('#discount-form').submit(function (e) {
+        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+        // Lấy mã giảm giá từ input
+        const couponCode = $('#coupon-code').val();
+
+        // Kiểm tra xem người dùng đã nhập mã chưa
+        if (!couponCode) {
+            $('#discount-message').text("Vui lòng nhập mã giảm giá.");
+            return;
+        }
+
+        // Gửi yêu cầu AJAX để kiểm tra mã giảm giá
+        $.ajax({
+            url: `http://localhost:8080/api/giamgia/code?maGiamGia=${couponCode}`, // URL đến API
+            type: 'GET', // Loại yêu cầu
+            success: function (response) {
+                console.log(response); // Ghi lại phản hồi để kiểm tra
+
+                // Kiểm tra nếu mã giảm giá không tồn tại
+                if (!response || !response.giamGia) {
+                    $('#discount-message').text("Mã giảm giá không hợp lệ.");
+                    return;
+                }
+
+                // Kiểm tra số lần sử dụng
+                if (response.soLansd <= 0) {
+                    $('#discount-message').text("Mã giảm giá này đã hết lượt sử dụng.");
+                    return;
+                }
+
+                // Kiểm tra giá trị tối thiểu để áp dụng mã giảm giá
+                const totalOrderValue = getTotalPrice(); 
+                if (totalOrderValue < response.giaTriMin) {
+                    $('#discount-message').text(`Đơn hàng phải có giá trị tối thiểu ${response.giaTriMin} để áp dụng mã giảm giá.`);
+                    return;
+                }
+
+                // Kiểm tra thời gian bắt đầu và kết thúc
+                const now = new Date();
+                const startDate = new Date(response.ngayBatDau);
+                const endDate = new Date(response.ngayKetThuc);
+
+                if (now < startDate) {
+                    $('#discount-message').text("Mã giảm giá chưa bắt đầu.");
+                    return;
+                }
+
+                if (now > endDate) {
+                    $('#discount-message').text("Mã giảm giá đã hết hiệu lực.");
+                    return;
+                }
+
+                // Nếu tất cả các điều kiện đều đúng
+                localStorage.setItem('discount', JSON.stringify(response));
+                $('#discount-message').text("Áp dụng mã giảm giá thành công.");
+                updateTotal(); // Hàm cập nhật tổng giá trị đơn hàng sau khi áp dụng giảm giá
+            },
+            error: function () {
+                deleteCoupon(); // Hàm xóa mã giảm giá trong localStorage (nếu cần)
+                $('#discount-message').text("Mã giảm giá không tồn tại.");
             }
         });
     });

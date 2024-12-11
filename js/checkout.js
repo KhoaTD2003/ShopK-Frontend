@@ -141,7 +141,7 @@ $(document).ready(function () {
             // ghiChu: `LOAI GIAO HANG: ${gh}, KHACH HANG GHI CHU: ${ghiChu}`,
             // ghiChu: `${ghiChu}, LOAI GIAO HANG: ${gh}`, // Thêm loại giao hàng vào ghi chú
             ghiChu: "Online",
-            // maGiamGia: getDiscount(),
+            maGiamGia: getDiscount().ma,
             sanPhamList: sanPhamList // Thêm danh sách sản phẩm vào yêu cầu
 
         };
@@ -168,7 +168,7 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.log("Có lỗi xảy ra: ", error);
                 console.log("Chi tiết lỗi: ", xhr.responseText); // In ra chi tiết lỗi
-                alert("Có lỗi xảy ra trong quá trình đặt hàng.");
+                alert(xhr.responseText);
             }
         });
     });
