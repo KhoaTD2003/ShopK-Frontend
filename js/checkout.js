@@ -32,10 +32,14 @@ function renderCheckout() {
 
 function updateCheckoutTotal() {
     // Cập nhật subtotal và total vào giao diện
-    let total = getTotalPrice()
-    let subtotal = -getGiamgia(total);
+    let total = getTotalPrice(); // Tổng giá ban đầu
+    let discount = getGiamgia(total); // Tính số tiền giảm giá
+    let subtotal = - discount; // Tiền giảm giá để hiển thị
+    total = Math.max(total - discount, 0); // Giá sau khi giảm, đảm bảo >= 0
+
+
     $('.checkout__order__subtotal span').text(subtotal.toLocaleString('vi-VN') + ' VND');
-    $('.checkout__order__total span').text((total + subtotal).toLocaleString('vi-VN') + ' VND'); // Bạn có thể thêm phí vận chuyển nếu cần
+    $('.checkout__order__total span').text((total).toLocaleString('vi-VN') + ' VND'); // Bạn có thể thêm phí vận chuyển nếu cần
 }
 // Gọi hàm renderCheckout để hiển thị hóa đơn
 renderCheckout();

@@ -39,7 +39,7 @@ function deleteCoupon2() {
 
 
 // function addToCart(product) {
-    
+
 //     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 //     console.log("Adding product to cart:", product);
@@ -67,7 +67,7 @@ function deleteCoupon2() {
 //         //     image: product.anh, // Hình ảnh sản phẩm
 //         // });
 //     }
-    
+
 //     alert("Đã thêm vào giỏ hàng thành công!")
 //     // Save updated cart to localStorage
 //     localStorage.setItem('cart', JSON.stringify(cart));
@@ -253,15 +253,15 @@ function renderCart() {
             }
         }
 
-                // Kiểm tra số lượng tồn kho
-                var productId = $button.parent().attr('prod-id');
-                var product = cart.find(item => item.prodId === productId);
-        
-                if (newVal > product.stock) {
-                    alert(`Không thể thêm số lượng này. Tồn kho hiện tại của sản phẩm "${product.prodName}" là ${product.stock}.`);
-                    return; // Không cập nhật số lượng nếu vượt quá tồn kho
-                }
-                
+        // Kiểm tra số lượng tồn kho
+        var productId = $button.parent().attr('prod-id');
+        var product = cart.find(item => item.prodId === productId);
+
+        if (newVal > product.stock) {
+            alert(`Không thể thêm số lượng này. Tồn kho hiện tại của sản phẩm "${product.prodName}" là ${product.stock}.`);
+            return; // Không cập nhật số lượng nếu vượt quá tồn kho
+        }
+
         $button.parent().find('input').val(newVal);
         onQtyButtonClick($button);
 
@@ -270,12 +270,17 @@ function renderCart() {
 
 }
 
-function updateTotal() {
-    let total = getTotalPrice()
-    let subtotal = -getGiamgia(total);
-    $('.shoping__checkout ul li:nth-child(1) span').text(subtotal.toLocaleString('vi-VN') + ' VND');
-    $('.shoping__checkout ul li:nth-child(2) span').text((total + subtotal).toLocaleString('vi-VN') + ' VND');
-}
+// function updateTotal() {
+//     let total = getTotalPrice()
+//     let subtotal = -getGiamgia(total);
+
+
+
+//     $('.shoping__checkout ul li:nth-child(1) span').text(subtotal.toLocaleString('vi-VN') + ' VND');
+//     $('.shoping__checkout ul li:nth-child(2) span').text((total + subtotal).toLocaleString('vi-VN') + ' VND');
+
+
+// }
 
 // function updateTotal() {
 //     let total = getTotalPrice(); // Tổng tiền trước giảm giá
@@ -287,53 +292,67 @@ function updateTotal() {
 //     $('.shoping__checkout ul li:nth-child(2) span').text(finalTotal.toLocaleString('vi-VN') + ' VND'); // Hiển thị tổng sau giảm giá
 // }
 
+    function updateTotal() {
+        let total = getTotalPrice(); // Tổng giá ban đầu
+        let discount = getGiamgia(total); // Tính số tiền giảm giá
+        let subtotal = - discount; // Tiền giảm giá để hiển thị
+        total = Math.max(total - discount, 0); // Giá sau khi giảm, đảm bảo >= 0
+
+        // Hiển thị tiền giảm giá
+        $('.shoping__checkout ul li:nth-child(1) span').text(subtotal.toLocaleString('vi-VN') + ' VND');
+
+        // Hiển thị giá sau khi giảm
+        $('.shoping__checkout ul li:nth-child(2) span').text(total.toLocaleString('vi-VN') + ' VND');
+    }
+
+
 function updateCartNumber() {
     $('.cart-number').text(getCart().map(e => e.quantity).reduce((a, b) => a + b, 0))
 }
 
-$(document).ready(function () {
-    $('#discount-form').submit(function (e) {
-        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+// $(document).ready(function () {
+//     $('#discount-form').submit(function (e) {
+//         e.preventDefault(); // Ngăn chặn hành vi mặc định của form
 
-        // Lấy mã giảm giá từ input
-        const couponCode = $('#coupon-code').val();
+//         // Lấy mã giảm giá từ input
+//         const couponCode = $('#coupon-code').val();
 
-        // Kiểm tra xem người dùng đã nhập mã chưa
-        if (!couponCode) {
-            $('#discount-message').text("Vui lòng nhập mã giảm giá.");
-            return;
-        }
+//         // Kiểm tra xem người dùng đã nhập mã chưa
+//         if (!couponCode) {
+//             $('#discount-message').text("Vui lòng nhập mã giảm giá.");
+//             return;
+//         }
 
-        // Gửi yêu cầu AJAX để kiểm tra mã giảm giá
-        $.ajax({
-            url: `http://localhost:8080/api/giamgia/code?maGiamGia=${couponCode}`,    // URL đến API
-            type: 'GET', // Loại yêu cầu
-            success: function (response) {
-                // Tìm mã giảm giá trong kết quả trả về
-                console.log(response)
-                let discount = response.giamGia
-                if (!discount) {
-                    $('#discount-message').text("Mã giảm giá không hợp lệ.");
-                    return;
-                }
+//         // Gửi yêu cầu AJAX để kiểm tra mã giảm giá
+//         $.ajax({
+//             url: `http://localhost:8080/api/giamgia/code?maGiamGia=${couponCode}`,    // URL đến API
+//             type: 'GET', // Loại yêu cầu
+//             success: function (response) {
+//                 // Tìm mã giảm giá trong kết quả trả về
+//                 console.log(response)
+//                 let discount = response.giamGia
+//                 if (!discount) {
+//                     $('#discount-message').text("Mã giảm giá không hợp lệ.");
+//                     return;
+//                 }
 
-                // Kiểm tra số lần sử dụng của mã giảm giá
-                if (response.soLansd > 0) {
-                    localStorage.setItem('discount', JSON.stringify(response));
-                    $('#discount-message').text("Áp dụng mã giảm giá thành công")
-                    updateTotal();
+//                 // Kiểm tra số lần sử dụng của mã giảm giá
+//                 if (response.soLansd > 0) {
+//                     localStorage.setItem('discount', JSON.stringify(response));
+//                     $('#discount-message').text("Áp dụng mã giảm giá thành công")
+//                     updateTotal();
 
-                } else {
-                    $('#discount-message').text("Mã giảm giá này đã hết lượt sử dụng.");
-                }
-            },
-            error: function () {
-                deleteCoupon();
-                $('#discount-message').text("Vui lòng kiểm tra lại");
-            }
-        });
-    });
-});
+//                 } else {
+//                     $('#discount-message').text("Mã giảm giá này đã hết lượt sử dụng.");
+//                 }
+//             },
+//             error: function () {
+//                 deleteCoupon();
+//                 $('#discount-message').text("Vui lòng kiểm tra lại");
+//             }
+//         });
+//     });
+// });
 
 
 $(document).ready(function () {
@@ -368,12 +387,6 @@ $(document).ready(function () {
                     return;
                 }
 
-                // Kiểm tra giá trị tối thiểu để áp dụng mã giảm giá
-                const totalOrderValue = getTotalPrice(); 
-                if (totalOrderValue < response.giaTriMin) {
-                    $('#discount-message').text(`Đơn hàng phải có giá trị tối thiểu ${response.giaTriMin} để áp dụng mã giảm giá.`);
-                    return;
-                }
 
                 // Kiểm tra thời gian bắt đầu và kết thúc
                 const now = new Date();
@@ -382,11 +395,25 @@ $(document).ready(function () {
 
                 if (now < startDate) {
                     $('#discount-message').text("Mã giảm giá chưa bắt đầu.");
+                    deleteCoupon();
+                    updateTotal()
                     return;
                 }
 
                 if (now > endDate) {
                     $('#discount-message').text("Mã giảm giá đã hết hiệu lực.");
+                    deleteCoupon();
+                    updateTotal()
+                    return;
+
+                }
+                
+                // Kiểm tra giá trị tối thiểu để áp dụng mã giảm giá
+                const totalOrderValue = getTotalPrice();
+                if (totalOrderValue < response.giaTriMin) {
+                    $('#discount-message').text(`Đơn hàng phải có giá trị tối thiểu ${response.giaTriMin} để áp dụng mã giảm giá.`);
+                    deleteCoupon();
+                    updateTotal()
                     return;
                 }
 
