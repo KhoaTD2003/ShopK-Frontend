@@ -1,6 +1,8 @@
+let cart = []; // Khai báo ở phạm vi toàn cục
+
 function renderCheckout() {
     // Gọi hàm getCart để lấy dữ liệu giỏ hàng
-    let cart = getCart();
+    cart = getCart();
     let checkoutHtml = '';
     let subtotal = 0;
 
@@ -82,14 +84,21 @@ $(document).ready(function () {
 
         e.preventDefault(); // Ngăn chặn hành vi mặc định của form
 
+        let cart = getCart(); // Giả sử hàm này trả về giỏ hàng
+
+        if (!cart || cart.length === 0) {
+            alert("Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi đặt hàng.");
+            return; // Ngăn chặn việc gửi yêu cầu
+        }
+
         // Gọi hàm getAuthUser để lấy ID tài khoản
         const user = getAuthUser(); // Giả sử hàm này trả về đối tượng người dùng
 
-        if (user == null) {
-            alert("Vui lòng đăng nhập trước để mua hàng.");
-            window.location.href = '/login.html';
-            return;
-        }
+        // if (user == null) {
+        //     alert("Vui lòng đăng nhập trước để mua hàng.");
+        //     window.location.href = '/login.html';
+        //     return;
+        // }
 
         // Lấy dữ liệu từ form
         const hoTen = $('#full-name').val();
@@ -106,20 +115,20 @@ $(document).ready(function () {
             alert("Số điện thoại phải có đúng 10 chữ số.");
             return; // Ngăn chặn việc gửi yêu cầu
         }
-        const idTaiKhoan = user.id; // Lấy ID tài khoản từ đối tượng người dùng
+        // const idTaiKhoan = user.id; // Lấy ID tài khoản từ đối tượng người dùng
+        const idTaiKhoan = user ? user.id : null; // Lấy ID tài khoản nếu đã đăng nhập
 
         // Giả sử phần tính tổng tiền đã được tính toán sẵn
         const tongTien = getTotalPrice();
-        const maHoaDon = generateRandomCode();  // Bạn có thể tạo mã hóa đơn ngẫu nhiên
-          // Lấy thông tin sản phẩm từ giỏ hàng
-          let cart = getCart(); // Giả sử hàm này trả về giỏ hàng
+        // const maHoaDon = generateRandomCode();  // Bạn có thể tạo mã hóa đơn ngẫu nhiên
+        // Lấy thông tin sản phẩm từ giỏ hàng
         //   let productDetails = cart.map(product => `${product.prodName} x${product.quantity} (${(product.price * product.quantity).toLocaleString('vi-VN')} VND)`).join(', ');
-          // Ghi chú bao gồm thông tin sản phẩm
+        // Ghi chú bao gồm thông tin sản phẩm
         //   const ghiChu = `Sản phẩm: ${productDetails}`;
-        
+
         let sanPhamList = cart.map(product => {
             return {
-                idSanPham: product.idSP, 
+                idSanPham: product.idSP,
                 ten: product.prodName,// ID sản phẩm
                 soLuong: product.quantity, // Số lượng
                 donGia: product.price // Đơn giá
@@ -140,14 +149,13 @@ $(document).ready(function () {
                 idTaiKhoan: idTaiKhoan // Gán ID tài khoản vào DTO
             },
             tongTien: tongTien.toString(), // Chuyển sang chuỗi nếu cần
-            tienThu: getTotalPrice()-getGiamgia(getTotalPrice()),  // Tiền thu mặc định là 0 khi chưa thanh toán
-            tienGiam: getGiamgia(getTotalPrice())  , // Tiền giảm mặc định
+            tienThu: getTotalPrice() - getGiamgia(getTotalPrice()),  // Tiền thu mặc định là 0 khi chưa thanh toán
+            tienGiam: getGiamgia(getTotalPrice()), // Tiền giảm mặc định
             // ghiChu: `LOAI GIAO HANG: ${gh}, KHACH HANG GHI CHU: ${ghiChu}`,
             // ghiChu: `${ghiChu}, LOAI GIAO HANG: ${gh}`, // Thêm loại giao hàng vào ghi chú
             ghiChu: "Online",
             maGiamGia: getDiscount().ma,
-            sanPhamList: sanPhamList // Thêm danh sách sản phẩm vào yêu cầu
-
+            sanPhamList: sanPhamList,// Thêm danh sách sản phẩm vào yêu cầ
         };
 
         // Gửi dữ liệu lên server qua AJAX
@@ -157,11 +165,15 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function (response) {
-                $('#successModal').modal('show'); // Sử dụng jQuery
-                // Chuyển trang khi modal bị đóng
-                $('#successModal').on('hidden.bs.modal', function () {
-                    window.location.href = '/shop-grid.html'; // Thay đổi URL này thành trang bạn muốn chuyển đến
-                });
+                console.log(response);
+                showSuccessModal(response);
+                // $('#successModal').modal('show'); // Sử dụng jQuery
+                // $('#orderCode').text("Mã đơn hàng của bạn: " + response); // Hiển thị mã đơn hàng
+
+                // // Chuyển trang khi modal bị đóng
+                // $('#successModal').on('hidden.bs.modal', function () {
+                //     window.location.href = '/shop-grid.html'; // Thay đổi URL này thành trang bạn muốn chuyển đến
+                // });
                 // alert("Đặt đơn thành công!");
                 // Xử lý điều hướng sau khi đặt hàng thành công
                 deleteCoupon();
@@ -178,10 +190,20 @@ $(document).ready(function () {
     });
 
     // Hàm tạo mã hóa đơn ngẫu nhiên (có thể thay đổi theo nhu cầu của bạn)
-    function generateRandomCode() {
-        return 'HD' + Math.random().toString(36).substring(2, 10).toUpperCase();
-    }
+    // function generateRandomCode() {
+    //     return 'HD' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    // }
+    function showSuccessModal(response) {
+        $('#orderCode').text("Mã đơn hàng của bạn là: " + response);
+        // $('#viewOrderDetails').attr("href", "/hoa-don/details/" + maHoaDon); // Cập nhật link xem chi tiết đơn hàng
+        $('#viewOrderDetails').show(); // Hiển thị nút xem chi tiết
+        $('#successModal').modal('show'); // Hiển thị modal
 
+         // Chuyển trang khi modal bị đóng
+         $('#successModal').on('hidden.bs.modal', function () {
+            window.location.href = '/shop-grid.html'; // Thay đổi URL này thành trang bạn muốn chuyển đến
+        });
+    }
 });
 
 
