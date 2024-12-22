@@ -78,6 +78,7 @@ $(document).ready(function () {
 });
 
 
+
 $(document).ready(function () {
     // Hàm xử lý khi người dùng nhấn nút "PLACE ORDER"
     $('.site-btn').click(function (e) {
@@ -149,13 +150,15 @@ $(document).ready(function () {
                 idTaiKhoan: idTaiKhoan // Gán ID tài khoản vào DTO
             },
             tongTien: tongTien.toString(), // Chuyển sang chuỗi nếu cần
-            tienThu: getTotalPrice() - getGiamgia(getTotalPrice()),  // Tiền thu mặc định là 0 khi chưa thanh toán
+            tienThu: Math.max(0, getTotalPrice() - getGiamgia(getTotalPrice())),  // Đảm bảo tiền thu không âm
+            // tienThu: getTotalPrice() - getGiamgia(getTotalPrice()),  // Tiền thu mặc định là 0 khi chưa thanh toán
             tienGiam: getGiamgia(getTotalPrice()), // Tiền giảm mặc định
             // ghiChu: `LOAI GIAO HANG: ${gh}, KHACH HANG GHI CHU: ${ghiChu}`,
             // ghiChu: `${ghiChu}, LOAI GIAO HANG: ${gh}`, // Thêm loại giao hàng vào ghi chú
             ghiChu: "Online",
             maGiamGia: getDiscount().ma,
             sanPhamList: sanPhamList,// Thêm danh sách sản phẩm vào yêu cầ
+            
         };
 
         // Gửi dữ liệu lên server qua AJAX

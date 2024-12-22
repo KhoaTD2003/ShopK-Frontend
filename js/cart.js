@@ -390,8 +390,14 @@ $(document).ready(function () {
 
                 // Kiểm tra thời gian bắt đầu và kết thúc
                 const now = new Date();
+                now.setHours(0, 0, 0, 0);
+
                 const startDate = new Date(response.ngayBatDau);
+                startDate.setHours(0, 0, 0, 0);
+
                 const endDate = new Date(response.ngayKetThuc);
+                endDate.setHours(0, 0, 0, 0);
+
 
                 if (now < startDate) {
                     $('#discount-message').text("Mã giảm giá chưa bắt đầu.");
